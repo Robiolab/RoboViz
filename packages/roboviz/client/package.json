@@ -1,0 +1,20 @@
+{
+  "name": "roboviz-client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.8.3",
+    "three": "^0.183.2"
+  },
+  "devDependencies": {
+    "@types/three": "^0.183.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.4.21",
+    "vite-plugin-singlefile": "^2.3.2"
+  }
+}

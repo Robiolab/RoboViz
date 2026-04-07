@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<robot name="two_link_arm">
+  <material name="red">
+    <color rgba="0.8 0.2 0.2 1"/>
+  </material>
+  <material name="blue">
+    <color rgba="0 0.5 1 1"/>
+  </material>
+
+  <link name="world"/>
+
+  <link name="upper_arm">
+    <visual>
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.04" length="0.5"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+  </link>
+
+  <link name="lower_arm">
+    <visual>
+      <origin xyz="0 0 0.2" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.04" length="0.4"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+  </link>
+
+  <link name="hand">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.06"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>
+
+  <joint name="shoulder" type="revolute">
+    <parent link="world"/>
+    <child link="upper_arm"/>
+    <origin xyz="0 0 1" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.5708" upper="1.5708" effort="10" velocity="1"/>
+  </joint>
+
+  <joint name="elbow" type="revolute">
+    <parent link="upper_arm"/>
+    <child link="lower_arm"/>
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.0944" upper="0" effort="10" velocity="1"/>
+  </joint>
+
+  <joint name="wrist" type="fixed">
+    <parent link="lower_arm"/>
+    <child link="hand"/>
+    <origin xyz="0 0 0.4" rpy="0 0 0"/>
+  </joint>
+</robot>

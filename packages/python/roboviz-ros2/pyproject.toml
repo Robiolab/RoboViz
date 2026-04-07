@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "roboviz-ros2"
+version = "0.1.0"
+description = "ROS2 bridge for roboviz joint state streaming"
+requires-python = ">=3.10"
+dependencies = [
+    "roboviz-client>=0.1.0",
+    # rclpy is NOT listed here — it is ambient from ROS2 install
+    # (source /opt/ros/jazzy/setup.bash before running)
+]
+
+[project.scripts]
+roboviz-bridge = "roboviz_ros2.bridge:main"

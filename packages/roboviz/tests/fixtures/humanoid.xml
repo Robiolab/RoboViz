@@ -1,0 +1,93 @@
+<mujoco model="humanoid">
+  <compiler angle="degree" eulerseq="xyz" meshdir="meshes"/>
+
+  <default>
+    <geom rgba="0.7 0.6 0.5 1" type="capsule"/>
+    <joint damping="2" type="hinge"/>
+    <default class="torso_class">
+      <geom rgba="0.8 0.7 0.6 1" type="capsule"/>
+    </default>
+    <default class="limb_class">
+      <geom rgba="0.6 0.5 0.4 1" type="capsule"/>
+      <joint damping="1"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <body name="torso" pos="0 0 1.4">
+      <joint name="root" type="free"/>
+      <geom type="capsule" fromto="0 0 0.07 0 0 0.35" size="0.07" class="torso_class"/>
+      <geom type="sphere" pos="0 0 0.46" size="0.09" class="torso_class"/>
+
+      <body name="head" pos="0 0 0.46">
+        <geom type="sphere" size="0.09" rgba="0.8 0.7 0.6 1"/>
+      </body>
+
+      <body name="abdomen" pos="0 0 0.07">
+        <joint name="abdomen_y" type="hinge" axis="0 1 0" range="-45 45" class="limb_class"/>
+        <geom type="capsule" fromto="0 0 0 0 0 -0.3" size="0.06" class="limb_class"/>
+
+        <body name="pelvis" pos="0 0 -0.3">
+          <geom type="sphere" size="0.07" rgba="0.7 0.6 0.5 1"/>
+
+          <!-- Right leg -->
+          <body name="right_thigh" pos="0 -0.1 0">
+            <joint name="right_hip_x" type="hinge" axis="1 0 0" range="-40 40" class="limb_class"/>
+            <joint name="right_hip_y" type="hinge" axis="0 1 0" range="-120 20" class="limb_class"/>
+            <geom type="capsule" fromto="0 0 0 0 0.01 -0.34" size="0.05" class="limb_class"/>
+
+            <body name="right_shin" pos="0 0.01 -0.34">
+              <joint name="right_knee" type="hinge" axis="0 -1 0" range="-160 2" class="limb_class"/>
+              <geom type="capsule" fromto="0 0 0 0 0 -0.3" size="0.04" class="limb_class"/>
+
+              <body name="right_foot" pos="0 0 -0.3">
+                <geom type="box" size="0.065 0.035 0.015" rgba="0.6 0.5 0.4 1"/>
+              </body>
+            </body>
+          </body>
+
+          <!-- Left leg -->
+          <body name="left_thigh" pos="0 0.1 0">
+            <joint name="left_hip_x" type="hinge" axis="-1 0 0" range="-40 40" class="limb_class"/>
+            <joint name="left_hip_y" type="hinge" axis="0 1 0" range="-120 20" class="limb_class"/>
+            <geom type="capsule" fromto="0 0 0 0 -0.01 -0.34" size="0.05" class="limb_class"/>
+
+            <body name="left_shin" pos="0 -0.01 -0.34">
+              <joint name="left_knee" type="hinge" axis="0 -1 0" range="-160 2" class="limb_class"/>
+              <geom type="capsule" fromto="0 0 0 0 0 -0.3" size="0.04" class="limb_class"/>
+
+              <body name="left_foot" pos="0 0 -0.3">
+                <geom type="box" size="0.065 0.035 0.015" rgba="0.6 0.5 0.4 1"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- Right arm -->
+      <body name="right_upper_arm" pos="0 -0.17 0.3">
+        <joint name="right_shoulder1" type="hinge" axis="2 1 1" range="-85 60" class="limb_class"/>
+        <joint name="right_shoulder2" type="hinge" axis="0 -1 1" range="-85 60" class="limb_class"/>
+        <geom type="capsule" fromto="0 0 0 0.16 -0.16 -0.16" size="0.04" class="limb_class"/>
+
+        <body name="right_lower_arm" pos="0.18 -0.18 -0.18">
+          <joint name="right_elbow" type="hinge" axis="0 -1 1" range="-90 50" class="limb_class"/>
+          <geom type="capsule" fromto="0.01 0.01 0.01 0.12 0.12 0.12" size="0.031" class="limb_class"/>
+        </body>
+      </body>
+
+      <!-- Left arm -->
+      <body name="left_upper_arm" pos="0 0.17 0.3">
+        <joint name="left_shoulder1" type="hinge" axis="2 -1 1" range="-60 85" class="limb_class"/>
+        <joint name="left_shoulder2" type="hinge" axis="0 1 1" range="-60 85" class="limb_class"/>
+        <geom type="capsule" fromto="0 0 0 -0.16 0.16 -0.16" size="0.04" class="limb_class"/>
+
+        <body name="left_lower_arm" pos="-0.18 0.18 -0.18">
+          <joint name="left_elbow" type="hinge" axis="0 -1 -1" range="-90 50" class="limb_class"/>
+          <geom type="capsule" fromto="-0.01 0.01 0.01 -0.12 0.12 0.12" size="0.031" class="limb_class"/>
+        </body>
+      </body>
+
+    </body>
+  </worldbody>
+</mujoco>

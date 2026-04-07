@@ -1,0 +1,4 @@
+python-socketio[client]>=5.16
+
+[dev]
+pytest
