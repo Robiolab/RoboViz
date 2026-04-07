@@ -1,0 +1,8 @@
+node_modules/
+dist/
+dist-tsc/
+*.tsbuildinfo
+*.tgz
+
+# Claude Code
+.claude/
