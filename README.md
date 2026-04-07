@@ -79,6 +79,59 @@ The client rate-limits to 60 Hz by default. Excess calls are dropped (not queued
 python -m roboviz_ros2.bridge --topic /joint_states --url http://localhost:3000
 ```
 
+### Record a session
+
+Capture joint state streams to a file for later replay, sharing, or debugging.
+
+```bash
+# Terminal 1: start the server
+roboviz serve robot.xml
+
+# Terminal 2: start recording (captures all incoming joint states)
+roboviz record -o demo.json
+
+# Terminal 3: run your simulation
+python my_simulation.py
+
+# Press Ctrl+C in terminal 2 to stop and save
+```
+
+Options:
+- `--url <url>` -- Server URL (default: `http://localhost:3000`)
+- `-o, --out <file>` -- Output file path (default: `trajectory.json`)
+
+The trajectory file stores timestamped frames in JSON:
+
+```json
+{
+  "robotName": "humanoid",
+  "format": "mjcf",
+  "frameCount": 1500,
+  "duration": 25.0,
+  "frames": [
+    { "t": 0.0, "qpos": [0.1, 0.2, 0.3] },
+    { "t": 0.016, "qpos": [0.11, 0.21, 0.31] }
+  ]
+}
+```
+
+Frames can contain either `qpos` (MuJoCo indexed array) or `joints` (named joint dict).
+
+### Replay a trajectory
+
+```bash
+roboviz play demo.json                # original speed
+roboviz play demo.json --speed 2      # 2x fast-forward
+roboviz play demo.json --speed 0.5    # half speed
+roboviz play demo.json --loop         # loop forever
+roboviz play demo.json --url http://host:3000
+```
+
+Options:
+- `--url <url>` -- Server URL (default: `http://localhost:3000`)
+- `--speed <n>` -- Playback speed multiplier (default: 1.0)
+- `--loop` -- Loop playback indefinitely
+
 ### Parse to JSON
 
 ```bash
@@ -112,6 +165,7 @@ Generates a self-contained `index.html` with the robot model embedded. No server
 - Three.js rendering with OrbitControls (rotate, pan, zoom)
 - Ambient + directional lighting with ground plane
 - Joint label overlays (CSS2D)
+- **Interactive joint sliders** -- collapsible control panel with a slider for every hinge and slide joint. Drag to set joint values in real time; sliders track incoming Python/ROS2 state and broadcast changes to other connected browsers. Great for model validation without writing any code.
 - FPS and update rate HUD
 - Connection status indicator (connected / disconnected / reconnecting)
 - Latest-state buffer decouples sim rate from render rate
