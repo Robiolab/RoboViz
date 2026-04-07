@@ -6,6 +6,8 @@ import { buildScene } from './buildScene.js';
 import { createLighting, createGroundPlane, fitCamera } from './sceneHelpers.js';
 import { applyJointState } from './applyJointState.js';
 import { createHUD, createConnectionStatus } from './hud.js';
+import { createSliderPanel } from './sliderPanel.js';
+import type { SliderPanel } from './sliderPanel.js';
 import type { RobotState } from './applyJointState.js';
 import type { SerializedRobotModel } from './types.js';
 
@@ -57,6 +59,7 @@ const setConnectionStatus = createConnectionStatus();
 // This decouples the Python simulation rate (up to 500Hz) from browser render rate (60Hz).
 let latestJointState: { qpos?: number[]; joints?: Record<string, number> } | null = null;
 let robotState: RobotState | null = null;
+let sliderPanel: SliderPanel | null = null;
 
 // --- Static build vs live mode ---
 const isStaticBuild = import.meta.env.VITE_STATIC_BUILD === 'true';
@@ -67,6 +70,9 @@ if (isStaticBuild && window.__ROBOVIZ_MODEL__) {
   buildScene(data, scene).then(({ robotGroup, jointGroupMap, restPositions }) => {
     fitCamera(camera, robotGroup, controls);
     robotState = { model: data, jointGroupMap, restPositions };
+    sliderPanel = createSliderPanel(data, (joints) => {
+      latestJointState = { joints };
+    });
   });
   setConnectionStatus('disconnected');
 } else {
@@ -77,12 +83,17 @@ if (isStaticBuild && window.__ROBOVIZ_MODEL__) {
     const { robotGroup, jointGroupMap, restPositions } = await buildScene(data, scene);
     fitCamera(camera, robotGroup, controls);
     robotState = { model: data, jointGroupMap, restPositions };
+    sliderPanel = createSliderPanel(data, (joints) => {
+      latestJointState = { joints };
+      socket.emit('joint_state', { joints });
+    });
   });
 
   // STRM-09: Buffer joint state — NEVER apply Three.js transforms here
   socket.on('joint_state', (data: { qpos?: number[]; joints?: Record<string, number> }) => {
     latestJointState = data;
     hud.recordUpdate();
+    if (sliderPanel) sliderPanel.updateFromState(data);
   });
 
   // Connection status events (REND-10)
